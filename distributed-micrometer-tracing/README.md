@@ -12,6 +12,13 @@ Run
 docker-compose up
 ```
 
+Request HTTP
+```sh
+curl -X GET http://localhost:9999/customers
+```
+
+
+
 See distributed-traceId, in another terminal tab
 ```
 docker-compose logs | grep [YOUR_TRACE_ID]
