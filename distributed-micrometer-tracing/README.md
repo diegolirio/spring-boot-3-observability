@@ -26,8 +26,8 @@ docker-compose logs | grep [YOUR_TRACE_ID]
 
 ## Architecture and Design
 
-Sync
+Sync :: `GET /customers`
 ![image](https://github.com/diegolirio/spring-boot-3-observability/assets/3913593/9cd769b9-afd9-449a-9e6a-edef05b9ec87)
 
-Async
+Async :: `POST /customers` and then `service1 produces message (customer) to topic and detail consumes and persist one`
 ![image](https://github.com/diegolirio/spring-boot-3-observability/assets/3913593/7049c6f8-a311-4517-95cd-c35e5378b9e0)
