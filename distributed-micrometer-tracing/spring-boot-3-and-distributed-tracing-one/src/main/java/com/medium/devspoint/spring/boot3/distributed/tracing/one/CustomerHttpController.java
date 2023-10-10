@@ -4,6 +4,7 @@ import brave.Tracer;
 import io.micrometer.observation.annotation.Observed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -61,19 +62,25 @@ class ServiceTwo {
 @Component
 class MyRestTemplate {
 
+    private final String customerDetailHost;
     Logger log = LoggerFactory.getLogger(ServiceTwo.class);
     final RestTemplate restTemplate;
     final Tracer tracer;
 
-    MyRestTemplate(RestTemplate restTemplate, Tracer tracer) {
+    MyRestTemplate(
+            RestTemplate restTemplate,
+            Tracer tracer,
+            @Value("${services.apis.customer-details}") String customerDetailHost
+    ) {
         this.restTemplate = restTemplate;
         this.tracer = tracer;
+        this.customerDetailHost = customerDetailHost;
     }
 
     public Detail getCustomerDetail(Customer customer) {
         var response = restTemplate
                 .getForEntity(
-                    "http://localhost:8080/v1/customers/"+customer.id()+"/details",
+                    customerDetailHost + "/v1/customers/"+customer.id()+"/details",
                     Detail.class
                 );
         log.info("m=getCustomerDetail, trace={}, response={}", tracer.currentSpan().context().traceId(), response);

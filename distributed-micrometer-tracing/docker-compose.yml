@@ -1,0 +1,47 @@
+version: '3.3'
+
+services:
+  one:
+    image: spring-boot-3-and-distributed-tracing-one:0.0.1-SNAPSHOT
+    hostname: one
+    deploy:
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: '0.5GB'
+    environment:
+      - CUSTOMER_DETAILS_HOST=http://two:8080
+    networks:
+      - app-network
+
+  two:
+    image: spring-boot-3-and-distributed-tracing-two:0.0.1-SNAPSHOT
+    hostname: two
+    deploy:
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: '0.5GB'
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - one
+      - two
+    ports:
+      - "9999:9999"
+    networks:
+      - app-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: '256MB'
+
+networks:
+  app-network:
