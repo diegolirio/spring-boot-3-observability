@@ -25,6 +25,7 @@ services:
           memory: '0.5GB'
     environment:
       - CUSTOMER_DETAILS_HOST=http://customer-detail:8080
+      - ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
     networks:
       - app-network      
 
@@ -36,6 +37,21 @@ services:
         limits:
           cpus: '0.4'
           memory: '0.5GB'
+    environment:
+      - ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
+    networks:
+      - app-network
+
+  zipkin:
+    image: openzipkin/zipkin
+    hostname: zipkin
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: '0.5GB'
+    ports:
+      - "9411:9411"
     networks:
       - app-network
 

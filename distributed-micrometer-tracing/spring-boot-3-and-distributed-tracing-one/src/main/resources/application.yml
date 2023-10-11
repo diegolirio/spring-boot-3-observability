@@ -14,28 +14,14 @@ logging:
     level:
         org.apache.http: DEBUG
         httpclient.wire: DEBUG
-        org:
-            springframework:
-                web:
-                    client:
-                        RestTemplate: DEBUG
+        org.springframework.web.client.RestTemplate: DEBUG
 management:
-    endpoints:
-        web:
-            exposure:
-                include: '*'
-
+    endpoints.web.exposure.include: '*'
     tracing:
-        sampling:
-            probability: 1.0
-        propagation:
-            type: w3c
+        sampling.probability: 1.0
+        propagation.type: w3c
         enabled: true
-        baggage:
-            enabled: true
+        baggage.enabled: true
     metrics:
-        distribution:
-            percentiles-histogram:
-                http:
-                    server:
-                        requests: true
+        distribution.percentiles-histogram.http.server.requests: true
+    zipkin.tracing.endpoint: ${ZIPKIN_ENDPOINT:http://localhost:9411/api/v2/spans}
