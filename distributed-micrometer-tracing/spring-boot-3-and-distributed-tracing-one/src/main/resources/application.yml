@@ -1,6 +1,8 @@
 spring:
-    application:
-        name: spring-boot-3-and-distributed-tracing-one
+    application.name: spring-boot-3-and-distributed-tracing-one
+    kafka:
+        producer.value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+        consumer.value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
 
 server.port: 8079
 
@@ -15,6 +17,8 @@ logging:
         org.apache.http: DEBUG
         httpclient.wire: DEBUG
         org.springframework.web.client.RestTemplate: DEBUG
+    log4j.rootLogger: DEBUG, stdout
+
 management:
     endpoints.web.exposure.include: '*'
     tracing:
