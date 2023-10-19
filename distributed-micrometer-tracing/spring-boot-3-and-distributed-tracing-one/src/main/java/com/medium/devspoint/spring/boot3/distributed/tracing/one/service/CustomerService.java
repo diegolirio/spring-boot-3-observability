@@ -46,24 +46,23 @@ public class CustomerService {
 
     public Customer save(Customer customer) {
         log.info("m=save, step=init, customer={}", customer);
-        // TODO save in database
-        //var detail = httpClientList.get(0).saveDetail(customer.detail());
+        var customerSaved = new Customer(new Random().nextLong(), customer.name(), null);
         if (customer.detail() != null) {
-            // TODO producer
-            //template.send("topic.customer.detail", customer.detail());
             try {
-                this.sendMessage(new ObjectMapper().writeValueAsString(new Detail(customer.detail().document(), null))); // customer.detail()));
+                var cdd = new CustomerDetailDto(customerSaved.id(), new Detail(customer.detail().document(), null));
+                var jsonStr = new ObjectMapper().writeValueAsString(cdd);
+                this.sendMessage(jsonStr); // producer
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
             log.info("m=save, step=send-detail, msg=Enviado para o topico");
         }
         log.info("m=save, step=end");
-        return new Customer(new Random().nextLong(), customer.name(), null);
+        return customerSaved;
     }
 
     public void sendMessage(String message) {
-        var future = template.send("topic.customer.detail", message).isDone();
+        var future = template.send("topic.customer.detail", message); //.isDone();
         log.info("m=sendMessage, msg=It is not a future, future={}", future);
 //        future.whenComplete((result, ex) -> {
 //            if (ex == null) {

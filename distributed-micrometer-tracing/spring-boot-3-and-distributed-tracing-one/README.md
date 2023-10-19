@@ -12,7 +12,6 @@ curl -H "x-b3─traceid : -65249b3b575efbaea3be01eb630e7f61" \
 
 ```
 
-
 ```shell
 curl -H 'Content-Type: application/json' \
       -d '{ "name":"foo","detail":{"document": "123", "bornAt": "2000-05-03"}}' \

@@ -53,6 +53,8 @@ public class KafkaConfig {
 //                meterRegistry,
 //                Collections.singletonList(new ImmutableTag("producer-detail", "customTagValue")))
 //        );
+
+
         return pf;
 //        return new DefaultKafkaProducerFactory<>(configProps);
     }
@@ -60,7 +62,8 @@ public class KafkaConfig {
     @Bean
     public KafkaTemplate<String, String> kafkaTemplate() {
         KafkaTemplate<String, String> kafkaTemplate = new KafkaTemplate<>(producerFactory());
-        kafkaTemplate.setMicrometerEnabled(false);
+        kafkaTemplate.setMicrometerEnabled(true);
+        kafkaTemplate.setObservationEnabled(true);
         return kafkaTemplate;
     }
 

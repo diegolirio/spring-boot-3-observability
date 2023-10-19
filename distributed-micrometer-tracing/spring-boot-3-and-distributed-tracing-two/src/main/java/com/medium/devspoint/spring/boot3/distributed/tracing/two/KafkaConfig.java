@@ -12,6 +12,8 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.KafkaAdmin;
+import org.springframework.kafka.listener.ContainerProperties;
+import org.springframework.kafka.support.LogIfLevelEnabled;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +21,7 @@ import java.util.Map;
 @EnableKafka
 @Configuration
 public class KafkaConfig {
+
     @Value(value = "${spring.kafka.bootstrap-servers}")
     private String bootstrapAddress;
 
@@ -34,7 +37,6 @@ public class KafkaConfig {
         return new NewTopic("topic.customer.detail", 1, (short) 1);
     }
 
-
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
@@ -46,13 +48,18 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, String>
-    kafkaListenerContainerFactory() {
+    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+
+        ContainerProperties containerProperties = factory.getContainerProperties();
+        containerProperties.setMicrometerEnabled(true);
+        containerProperties.setLogContainerConfig(true);
+        containerProperties.setObservationEnabled(true);
+        //containerProperties.setAckMode(ContainerProperties.AckMode.MANUAL);
+        containerProperties.setCommitLogLevel(LogIfLevelEnabled.Level.INFO);
+
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
 
 }
-
-
