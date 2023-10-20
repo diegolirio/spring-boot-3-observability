@@ -12,8 +12,6 @@ services:
           memory: '0.5GB'
     ports:
       - "9411:9411"
-    # networks:
-    #   - app-network
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -68,8 +66,6 @@ services:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: "zookeeper:2181"
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'broker:29092'
-      #SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
-      #SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8079,http://schema-registry:8079,http://localhost:8079
 
   control-center:
     image: confluentinc/cp-enterprise-control-center:latest
@@ -89,7 +85,4 @@ services:
       CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
       CONFLUENT_METRICS_TOPIC_REPLICATION: 1
       PORT: 9021
-      # CONTROL_CENTER_BOOTSTRAP_SERVERS: 'broker:29092'
-      # CONTROL_CENTER_REPLICATION_FACTOR: 1
-      # CONTROL_CENTER_CONNECT_CLUSTER: http://kafka-connect:8083      
 

@@ -1,0 +1,12 @@
+spring:
+  application.name: customers
+  datasource:
+    url: jdbc:h2:mem:demodb
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+    h2.console.enabled: true
+
+logging:
+  pattern:
+    level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
