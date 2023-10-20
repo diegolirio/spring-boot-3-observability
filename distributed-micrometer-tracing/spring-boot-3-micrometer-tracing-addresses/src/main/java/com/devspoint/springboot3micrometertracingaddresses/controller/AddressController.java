@@ -4,6 +4,7 @@ import com.devspoint.springboot3micrometertracingaddresses.entity.AddressEntity;
 import com.devspoint.springboot3micrometertracingaddresses.repository.AddressRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,8 +24,14 @@ public class AddressController {
     }
 
     @GetMapping("/customers/{customerId}")
-    public List<AddressEntity> getAddressesByCustomerId(@PathVariable("customerId") Long customerId) {
+    public ResponseEntity<List<AddressEntity>> getAddressesByCustomerId(@PathVariable("customerId") Long customerId) {
         log.info("method=getAddressesByCustomerId, step=starting, customerId={}", customerId);
-        return addressRepository.findByCustomerId(customerId);
+        List<AddressEntity> addresses = addressRepository.findByCustomerId(customerId);
+        if (addresses.isEmpty()) {
+            log.warn("method=getAddressesByCustomerId, step=not_found_address, customerId={}", customerId);
+            return ResponseEntity.noContent().build();
+        }
+        log.info("method=getAddressesByCustomerId, step=finished, customerId={}", customerId);
+        return ResponseEntity.ok().body(addresses);
     }
 }

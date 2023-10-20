@@ -26,19 +26,13 @@ public class KafkaCustomerConsumer {
     @KafkaListener(topics = "topic.customer.updated", groupId = "addresses")
     public void listenGroupAddresses(String message) throws JsonProcessingException {
         log.info("m=listenGroupAddresses, step=init, message={}", message);
-        ObjectMapper objectMapper = new ObjectMapper();
-        //objectMapper.registerModule(new JavaTimeModule());
-        CustomerDto dto = objectMapper.readValue(message, CustomerDto.class);
-
-        if (dto.getAddresses().isEmpty()) {
+        CustomerDto dto = new ObjectMapper().readValue(message, CustomerDto.class);
+        if (dto.getAddresses() == null || dto.getAddresses().isEmpty()) {
             log.warn("m=listenGroupAddresses, step=not_contains_address");
             return;
         }
-
-        List<AddressEntity> address = dto.getAddresses().stream().peek(it -> it.setId(dto.getId())).collect(Collectors.toList());
+        List<AddressEntity> address = dto.getAddresses().stream().peek(it -> it.setCustomerId(dto.getId())).collect(Collectors.toList());
         addressRepository.saveAll(address);
-
-        log.warn("m=listenGroupAddresses, step=finished");
+        log.info("m=listenGroupAddresses, step=finished");
     }
-
 }
